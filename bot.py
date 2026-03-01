@@ -14,7 +14,7 @@ import argparse
 import logging
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import config
 from coinbase_client import CoinbaseClient
@@ -146,7 +146,7 @@ class TradeBot:
         while True:
             try:
                 scan_count += 1
-                now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+                now = datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
                 portfolio_usd = self.client.get_usd_balance()
 
                 logger.info(f"{'─'*50}")
@@ -193,3 +193,4 @@ if __name__ == "__main__":
 
     bot = TradeBot(pairs=args.pairs)
     bot.run()
+            
