@@ -9,7 +9,7 @@ import logging
 import os
 import pickle
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 import numpy as np
@@ -53,7 +53,7 @@ class TradeLogger:
             "take_profit":       take_profit,
             "signal_confidence": signal_confidence,
             "features":          features,
-            "entry_time":        datetime.utcnow().isoformat(),
+            "entry_time":        datetime.now(timezone.utc).isoformat(),
             "exit_price":        None,
             "exit_time":         None,
             "pnl_pct":           None,
@@ -68,7 +68,7 @@ class TradeLogger:
         for t in self.trades:
             if t["trade_id"] == trade_id:
                 t["exit_price"] = exit_price
-                t["exit_time"]  = datetime.utcnow().isoformat()
+                t["exit_time"]  = datetime.now(timezone.utc).isoformat()
                 pnl = (exit_price - t["entry_price"]) / t["entry_price"]
                 t["pnl_pct"] = round(pnl * 100, 4)
                 t["outcome"] = "win" if pnl > 0.001 else ("loss" if pnl < -0.001 else "break_even")
@@ -244,3 +244,4 @@ class AdaptiveLearner:
             "avg_rr":        f"{self.logger_.avg_rr():.2f}",
             "model_trained": self.trained,
         }
+        
